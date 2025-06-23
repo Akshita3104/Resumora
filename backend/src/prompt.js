@@ -13,7 +13,7 @@ ${domainInstructions}
 4. **Semantic Analysis**: Identify implied skills (e.g., "led a team" implies leadership) and soft skills from context.
 5. **Output Format**: Return a JSON object with the structure below. Ensure **all fields** are populated or explicitly null/empty. Use comma-separated strings for lists.
 6. **Error Handling**: If resume is unparseable, return a score of 0 with an error message in remarks.
-7. **Resume Analysis Formatting**: Format the "remarks" field under "section_tabs.resume_format" as structured Markdown. Use single-level headers (e.g., **Section Title**) for section titles (e.g., **Strengths**, **Weaknesses**), align content with bullet points (-), and ensure consistent indentation for readability. Avoid excessive asterisks (e.g., use **text** instead of ***text***).
+7. **Resume Analysis Formatting**: Format the "remarks" field under "section_tabs.resume_format" as structured plain text. Use plain text section titles (e.g., "Section Title") for sections like "Strengths" and "Weaknesses", align content with bullet points (-), and ensure consistent indentation for readability. Avoid any use of asterisks (e.g., **text** or ***text***) or other Markdown emphasis markers in the output.
 
 ### Job Description (Optional)
 \`\`\`

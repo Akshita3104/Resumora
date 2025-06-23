@@ -122,21 +122,30 @@ export const ATSChecker = ({ resumeData, onScoreUpdate }) => {
     setIsCollapsed((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
-  // Function to convert asterisk bullets to numbered bullets
-  const formatFeedback = (feedback) => {
-    if (!feedback) return 'No data available';
-    const lines = feedback.split('\n');
+  const formatFeedback = (content) => {
+    if (!content) return 'No data available';
     let num = 1;
-    return lines.map(line => {
-      if (line.trim().startsWith('**') && line.trim().endsWith('**')) {
-        return line; // Keep section headers as is
-      } else if (line.trim().startsWith('*')) {
-        const formattedLine = line.replace('*', `${num}.`).trim();
-        num++;
-        return formattedLine;
-      }
-      return line.trim();
-    }).join('\n');
+    return content
+      .split('\n')
+      .map((line) => {
+        line = line.trim();
+        if (line.startsWith('**') && line.includes('**:')) {
+          // Remove ** and **: from key-value pairs
+          return line.replace(/\*\*(.*?)\*\*:/, '$1:').trim();
+        } else if (line.startsWith('*') || line.match(/^\d+\./)) {
+          // Convert * or numbered bullets to plain numbered list with sequential numbering
+          const text = line.replace(/^\*|\d+\.\s*/, '').trim();
+          const formattedLine = `${num}. ${text.replace(/\*\*(.*?)\*\*/, '$1')}`;
+          num++;
+          return formattedLine;
+        } else if (line) {
+          // Append continuation lines without modification
+          return line;
+        }
+        return null;
+      })
+      .filter((line) => line !== null)
+      .join('\n');
   };
 
   return (
@@ -257,20 +266,33 @@ export const ATSChecker = ({ resumeData, onScoreUpdate }) => {
               </div>
               {!isCollapsed.resumeAnalysis && (
                 <div className="mt-2 space-y-4 text-sm text-gray-600 dark:text-gray-300">
-                  {currentResult.fullFeedback.match(/^\*\*Resume Analysis\*\*/m)?.input?.split('\n')?.slice(1).join('\n').split('**').map((section, index) => {
-                    if (section.trim()) {
-                      const [title, content] = section.split('\n', 1)[0] ? [section.split('\n', 1)[0].trim(), section.split('\n').slice(1).join('\n').trim()] : ['', section.trim()];
-                      return (
-                        <div key={index} className="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow">
-                          {title && <h5 className="text-md font-semibold mb-2">{title}</h5>}
-                          <pre className="bg-gray-100 dark:bg-gray-800 p-2 rounded-lg overflow-auto text-left whitespace-pre-wrap">
-                            {formatFeedback(content || 'No data available')}
-                          </pre>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }) || <pre className="bg-gray-100 dark:bg-gray-800 p-2 rounded-lg overflow-auto text-left">No data available</pre>}
+                  {currentResult.fullFeedback
+                    .split('\n')
+                    .reduce((sections, line) => {
+                      if (line.match(/^#####\s(.+)/)) {
+                        sections.push({ title: line.replace(/^#####\s/, ''), content: '' });
+                      } else if (sections.length > 0) {
+                        sections[sections.length - 1].content += (sections[sections.length - 1].content ? '\n' : '') + line;
+                      }
+                      return sections;
+                    }, [])
+                    .filter(section => section.title || section.content.trim())
+                    .map((section, index) => (
+                      <div key={index} className="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow">
+                        {section.title && (
+                          <h5 className="text-md font-semibold mb-4 bg-blue-100 dark:bg-blue-900 p-2 rounded-t-lg text-blue-800 dark:text-blue-200">
+                            {section.title}
+                          </h5>
+                        )}
+                        <pre className="bg-gray-100 dark:bg-gray-800 p-2 rounded-b-lg overflow-auto text-left whitespace-pre-wrap">
+                          {formatFeedback(section.content)}
+                        </pre>
+                      </div>
+                    )) || (
+                    <pre className="bg-gray-100 dark:bg-gray-800 p-2 rounded-lg overflow-auto text-left">
+                      No data available
+                    </pre>
+                  )}
                 </div>
               )}
             </div>
