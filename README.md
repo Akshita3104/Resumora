@@ -53,6 +53,22 @@ npm -v  #
 git clone git@github.com:Akshita3104/Resume-builder-with-ATS-checker.git
 ```
 
+## 🛠️ Configuration  
+```bash
+## Install Backend Dependencies:
+cd backend
+npm install
+
+## Install Frontend Dependencies:
+cd ../frontend
+npm install
+
+## Setup Environment Variables:
+Create a .env file inside the backend folder with the following content:
+GROQ_API_KEY=your_groq_api_key_here
+Replace your_groq_api_key_here with your actual API key.
+```
+
 ### Launch Development  
 ```bash
 # Start in development mode (concurrently)
@@ -83,21 +99,7 @@ Our algorithm evaluates 12 critical dimensions:
 
 > 📌 Pro Tip: Scores >85/100 pass 92% of Fortune 500 ATS filters
 
-## 🛠️ Configuration  
-```bash
-## Install Backend Dependencies:
-cd backend
-npm install
 
-## Install Frontend Dependencies:
-cd ../frontend
-npm install
-
-## Setup Environment Variables:
-Create a .env file inside the backend folder with the following content:
-GROQ_API_KEY=your_groq_api_key_here
-Replace your_groq_api_key_here with your actual API key.
-```
 
 ## 📸 UI Preview  
 
