@@ -8,8 +8,6 @@
   <img src="https://img.shields.io/badge/License-MIT-blue.svg" />
 </div>
 
-![ATS Resume Builder Dashboard](https://via.placeholder.com/1200x600/1e293b/ffffff?text=Modern+Resume+Builder+with+Real-time+ATS+Scoring)
-
 ## 🔍 Why This Tool Matters  
 > "75% of resumes are rejected by ATS before human eyes see them. Optimize yours to survive the algorithm." - *HR Tech Report 2024*
 
@@ -86,11 +84,19 @@ Our algorithm evaluates 12 critical dimensions:
 > 📌 Pro Tip: Scores >85/100 pass 92% of Fortune 500 ATS filters
 
 ## 🛠️ Configuration  
+```bash
+## Install Backend Dependencies:
+cd backend
+npm install
 
-### Environment Variables  
-Create `.env` in `/backend`:  
-```env
-GROQ_API (add your groq llm api key in env).
+## Install Frontend Dependencies:
+cd ../frontend
+npm install
+
+## Setup Environment Variables:
+Create a .env file inside the backend folder with the following content:
+GROQ_API_KEY=your_groq_api_key_here
+Replace your_groq_api_key_here with your actual API key.
 ```
 
 ## 📸 UI Preview  
