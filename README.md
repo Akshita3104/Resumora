@@ -45,27 +45,24 @@ G --> H[Actionable Insights]
 
 ### Prerequisites  
 ```bash
-node -v # v18.0+ required
-npm -v  # v9.0+ required
+node -v # 
+npm -v  # 
 ```
 
 ### Installation  
 ```bash
 # Clone with SSH
 git clone git@github.com:Akshita3104/Resume-builder-with-ATS-checker.git
-
-# Install dependencies
-cd Resume-builder-with-ATS-checker
-npm run setup # Installs frontend + backend simultaneously
 ```
 
 ### Launch Development  
 ```bash
 # Start in development mode (concurrently)
 npm run dev
+npm start
 
 # Access interfaces:
-# Frontend → http://localhost:3000
+# Frontend → http://localhost:8080
 # Backend → http://localhost:5000
 ```
 
@@ -93,27 +90,7 @@ Our algorithm evaluates 12 critical dimensions:
 ### Environment Variables  
 Create `.env` in `/backend`:  
 ```env
-PORT=5000
-ATS_THRESHOLD=85 # Minimum passing score
-MAX_FILE_SIZE=5 # MB
-ALLOWED_MIME_TYPES=application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document
-```
-
-### Customize Sections  
-Edit `frontend/src/config/resumeSections.js`:  
-```js
-export const ENABLED_SECTIONS = {
-  certifications: true,
-  projects: true,
-  languages: false, // Disable languages section
-  awards: true
-};
-
-export const SECTION_WEIGHTS = {
-  skills: 0.25,
-  experience: 0.30,
-  education: 0.15
-};
+GROQ_API (add your groq llm api key in env).
 ```
 
 ## 📸 UI Preview  
@@ -125,7 +102,6 @@ export const SECTION_WEIGHTS = {
 
 ## 🌐 Deployment  
 [![Deploy on Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAkshita3104%2FResume-builder-with-ATS-checker)  
-[![Deploy on Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Akshita3104/Resume-builder-with-ATS-checker)
 
 ## 📜 License  
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
