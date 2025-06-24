@@ -32,14 +32,26 @@ export const ResumeBuilder = ({ resumeData, setResumeData }) => {
     }
   };
 
+  const deleteProfileImage = () => {
+    setResumeData({
+      ...resumeData,
+      personalInfo: {
+        ...resumeData.personalInfo,
+        profileImage: null,
+      },
+    });
+  };
+
   const addExperience = () => {
     const newExperience = {
       id: Date.now().toString(),
       title: '',
       company: '',
       location: '',
-      startDate: '',
-      endDate: '',
+      startMonth: '',
+      startYear: '',
+      endMonth: '',
+      endYear: '',
       current: false,
       description: '',
       achievements: [''],
@@ -57,11 +69,12 @@ export const ResumeBuilder = ({ resumeData, setResumeData }) => {
       degree: '',
       school: '',
       location: '',
-      startDate: '',
-      endDate: '',
-      gpa: '',
-      marks: '',
-      year: '',
+      startMonth: '',
+      startYear: '',
+      endMonth: '',
+      endYear: '',
+      gradeType: 'CGPA', // Default grade type
+      gradeValue: '',
     };
     setResumeData({
       ...resumeData,
@@ -101,7 +114,6 @@ export const ResumeBuilder = ({ resumeData, setResumeData }) => {
       id: Date.now().toString(),
       name: '',
       issuer: '',
-      date: '',
       url: '',
       links: [''],
     };
@@ -248,11 +260,19 @@ export const ResumeBuilder = ({ resumeData, setResumeData }) => {
                       onChange={(e) => handleImageUpload(e, 'profile')}
                     />
                     {resumeData.personalInfo.profileImage && (
-                      <img 
-                        src={resumeData.personalInfo.profileImage} 
-                        alt="Profile" 
-                        className="w-12 h-12 rounded-full border-2 border-blue-500 dark:border-blue-400"
-                      />
+                      <div className="relative">
+                        <img 
+                          src={resumeData.personalInfo.profileImage} 
+                          alt="Profile" 
+                          className="w-24 h-24 rounded-full border-2 border-blue-500 dark:border-blue-400 object-cover"
+                        />
+                        <button
+                          onClick={deleteProfileImage}
+                          className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full hover:bg-red-600"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -350,6 +370,68 @@ export const ResumeBuilder = ({ resumeData, setResumeData }) => {
                       })}
                       className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none"
                     />
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <select
+                        value={exp.startMonth}
+                        onChange={(e) => setResumeData({
+                          ...resumeData,
+                          experience: resumeData.experience.map(item =>
+                            item.id === exp.id ? { ...item, startMonth: e.target.value } : item
+                          )
+                        })}
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none"
+                      >
+                        <option value="">Start Month</option>
+                        {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(month => (
+                          <option key={month} value={month}>{month}</option>
+                        ))}
+                      </select>
+                      <select
+                        value={exp.startYear}
+                        onChange={(e) => setResumeData({
+                          ...resumeData,
+                          experience: resumeData.experience.map(item =>
+                            item.id === exp.id ? { ...item, startYear: e.target.value } : item
+                          )
+                        })}
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none"
+                      >
+                        <option value="">Start Year</option>
+                        {Array.from({ length: 20 }, (_, i) => new Date().getFullYear() - 10 + i).map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
+                      <select
+                        value={exp.endMonth}
+                        onChange={(e) => setResumeData({
+                          ...resumeData,
+                          experience: resumeData.experience.map(item =>
+                            item.id === exp.id ? { ...item, endMonth: e.target.value } : item
+                          )
+                        })}
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none"
+                      >
+                        <option value="">End Month</option>
+                        {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(month => (
+                          <option key={month} value={month}>{month}</option>
+                        ))}
+                      </select>
+                      <select
+                        value={exp.endYear}
+                        onChange={(e) => setResumeData({
+                          ...resumeData,
+                          experience: resumeData.experience.map(item =>
+                            item.id === exp.id ? { ...item, endYear: e.target.value } : item
+                          )
+                        })}
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none"
+                      >
+                        <option value="">End Year</option>
+                        {Array.from({ length: 20 }, (_, i) => new Date().getFullYear() - 10 + i).map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
+                    </div>
                     <div>
                       <div className="flex items-center gap-2 mb-2">
                         <Link className="w-4 h-4 text-gray-900 dark:text-gray-200" />
@@ -433,28 +515,96 @@ export const ResumeBuilder = ({ resumeData, setResumeData }) => {
                         })}
                         className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none"
                       />
-                      <input
-                        placeholder="Marks/Percentage"
-                        value={edu.marks}
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <select
+                        value={edu.gradeType}
                         onChange={(e) => setResumeData({
                           ...resumeData,
                           education: resumeData.education.map(item =>
-                            item.id === edu.id ? { ...item, marks: e.target.value } : item
+                            item.id === edu.id ? { ...item, gradeType: e.target.value } : item
+                          )
+                        })}
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none"
+                      >
+                        <option value="CGPA">CGPA</option>
+                        <option value="SGPA">SGPA</option>
+                        <option value="Percentage">Percentage</option>
+                        <option value="Percentile">Percentile</option>
+                      </select>
+                      <input
+                        placeholder="Grade Value"
+                        value={edu.gradeValue}
+                        onChange={(e) => setResumeData({
+                          ...resumeData,
+                          education: resumeData.education.map(item =>
+                            item.id === edu.id ? { ...item, gradeValue: e.target.value } : item
                           )
                         })}
                         className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none"
                       />
-                      <input
-                        placeholder="Year of Graduation"
-                        value={edu.year}
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <select
+                        value={edu.startMonth}
                         onChange={(e) => setResumeData({
                           ...resumeData,
                           education: resumeData.education.map(item =>
-                            item.id === edu.id ? { ...item, year: e.target.value } : item
+                            item.id === edu.id ? { ...item, startMonth: e.target.value } : item
                           )
                         })}
                         className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none"
-                      />
+                      >
+                        <option value="">Start Month</option>
+                        {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(month => (
+                          <option key={month} value={month}>{month}</option>
+                        ))}
+                      </select>
+                      <select
+                        value={edu.startYear}
+                        onChange={(e) => setResumeData({
+                          ...resumeData,
+                          education: resumeData.education.map(item =>
+                            item.id === edu.id ? { ...item, startYear: e.target.value } : item
+                          )
+                        })}
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none"
+                      >
+                        <option value="">Start Year</option>
+                        {Array.from({ length: 20 }, (_, i) => new Date().getFullYear() - 10 + i).map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
+                      <select
+                        value={edu.endMonth}
+                        onChange={(e) => setResumeData({
+                          ...resumeData,
+                          education: resumeData.education.map(item =>
+                            item.id === edu.id ? { ...item, endMonth: e.target.value } : item
+                          )
+                        })}
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none"
+                      >
+                        <option value="">End Month</option>
+                        {['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].map(month => (
+                          <option key={month} value={month}>{month}</option>
+                        ))}
+                      </select>
+                      <select
+                        value={edu.endYear}
+                        onChange={(e) => setResumeData({
+                          ...resumeData,
+                          education: resumeData.education.map(item =>
+                            item.id === edu.id ? { ...item, endYear: e.target.value } : item
+                          )
+                        })}
+                        className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none"
+                      >
+                        <option value="">End Year</option>
+                        {Array.from({ length: 20 }, (_, i) => new Date().getFullYear() - 10 + i).map(year => (
+                          <option key={year} value={year}>{year}</option>
+                        ))}
+                      </select>
                     </div>
                   </div>
                 ))}
@@ -693,13 +843,12 @@ export const ResumeBuilder = ({ resumeData, setResumeData }) => {
                       />
                     </div>
                     <input
-                      type="date"
-                      placeholder="Date Obtained"
-                      value={cert.date}
+                      placeholder="Certification URL (optional)"
+                      value={cert.url}
                       onChange={(e) => setResumeData({
                         ...resumeData,
                         certifications: resumeData.certifications.map(item =>
-                          item.id === cert.id ? { ...item, date: e.target.value } : item
+                          item.id === cert.id ? { ...item, url: e.target.value } : item
                         )
                       })}
                       className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 outline-none"

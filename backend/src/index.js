@@ -39,8 +39,8 @@ if (!process.env.GROQ_API_KEY) {
   process.exit(1);
 }
 
-app.use(cors({ origin: 'http://localhost:3000' }));
-app.use(express.json({ limit: '1mb' }));
+app.use(cors({ origin: 'http://localhost:8080' }));
+app.use(express.json({ limit: '10mb' }));
 
 app.post('/analyze-resume', upload.single('resume'), async (req, res) => {
   try {
@@ -78,11 +78,11 @@ app.post('/analyze-resume', upload.single('resume'), async (req, res) => {
     const prompt = buildPrompt(resumeText, jobDescription);
 
     const completion = await client.chat.completions.create({
-      model: 'mixtral-8x7b-32768',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 8192,
-      temperature: 0.3,
-      response_format: { type: 'json_object' },
+    model: 'llama-3.1-8b-instant',
+    messages: [{ role: 'user', content: prompt }],
+    max_tokens: 8192,
+    temperature: 0.3,
+    response_format: { type: 'json_object' },
     });
 
     const content = JSON.parse(completion.choices[0].message.content.trim());

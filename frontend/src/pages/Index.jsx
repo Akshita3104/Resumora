@@ -14,6 +14,7 @@ const defaultResumeData = {
     location: 'New York, NY',
     linkedin: 'linkedin.com/in/johndoe',
     website: 'johndoe.dev',
+    profileImage: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAAAAAAAD/2wBDAAoHBwkHBgoJCAkLCwoMDxkQCg8N...[base64 data]',
   },
   summary: 'Experienced software developer with 5+ years of expertise in full-stack development, specializing in React, Node.js, and cloud technologies. Passionate about creating scalable solutions and mentoring junior developers.',
   experience: [
@@ -162,39 +163,534 @@ const Index = () => {
       tempDiv.style.position = 'absolute';
       tempDiv.style.left = '-9999px';
       tempDiv.style.top = '0';
-      tempDiv.style.width = '210mm';
-      tempDiv.style.backgroundColor = 'white';
-      tempDiv.style.padding = '20mm';
+      tempDiv.style.width = '210mm'; // A4 width
+      tempDiv.style.backgroundColor = '#000000';
+      tempDiv.style.padding = '10mm';
       tempDiv.style.fontFamily = 'Arial, sans-serif';
       tempDiv.style.fontSize = '12px';
-      tempDiv.style.lineHeight = '1.4';
+      tempDiv.style.lineHeight = '1.2';
       document.body.appendChild(tempDiv);
 
-      const htmlContent = generatePDFContent(resumeData);
+      const htmlContent = `
+        <div style="width: 170mm; margin: 0 auto; background: #000000; color: #ffffff; padding: 0; border: 1px solid #ffffff;">
+          <div style="margin-bottom: 10mm; text-align: center;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5mm;">
+              ${
+                resumeData.personalInfo.profileImage
+                  ? `
+                  <div style="flex-shrink: 0;">
+                    <div style="width: 50mm; height: 50mm; border: 2px solid #ffffff; border-radius: 50%; overflow: hidden;">
+                      <img
+                        src="${resumeData.personalInfo.profileImage}"
+                        alt="${resumeData.personalInfo.name || 'Profile'}"
+                        style="width: 100%; height: 100%; object-fit: cover;"
+                        onerror="this.style.display='none';this.parentElement.innerHTML='<div style=\\"width: 100%; height: 100%; background: #333333; display: flex; align-items: center; justify-content: center; color: #ffffff; font-size: 8px; font-weight: bold;\\"><svg style=\\"width: 12px; height: 12px;\\" fill=\\"none\\" stroke=\\"currentColor\\" viewBox=\\"0 0 24 24\\" xmlns=\\"http://www.w3.org/2000/svg\\"><path stroke-linecap=\\"round\\" stroke-linejoin=\\"round\\" stroke-width=\\"2\\" d=\\"M12 4a4 4 0 00-4 4v4a4 4 0 008 0V8a4 4 0 00-4-4zM12 14v6m-4-2h8\\"></path></svg></div>';"
+                      />
+                    </div>
+                  </div>
+                  `
+                  : ''
+              }
+              <div>
+                <h1 style="font-size: 24px; font-weight: bold; color: #ffffff; margin: 0; text-transform: uppercase; letter-spacing: 2px;">
+                  ${resumeData.personalInfo.name || 'Your Name'}
+                </h1>
+                <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; color: #cccccc; font-size: 12px;">
+                  ${
+                    resumeData.personalInfo.email
+                      ? `<span>${resumeData.personalInfo.email}</span>`
+                      : ''
+                  }
+                  ${
+                    resumeData.personalInfo.email &&
+                    (resumeData.personalInfo.phone ||
+                      resumeData.personalInfo.location ||
+                      resumeData.personalInfo.linkedin ||
+                      resumeData.personalInfo.website)
+                      ? `<span> | </span>`
+                      : ''
+                  }
+                  ${
+                    resumeData.personalInfo.phone
+                      ? `<span>${resumeData.personalInfo.phone}</span>`
+                      : ''
+                  }
+                  ${
+                    resumeData.personalInfo.phone &&
+                    (resumeData.personalInfo.location ||
+                      resumeData.personalInfo.linkedin ||
+                      resumeData.personalInfo.website)
+                      ? `<span> | </span>`
+                      : ''
+                  }
+                  ${
+                    resumeData.personalInfo.location
+                      ? `<span>${resumeData.personalInfo.location}</span>`
+                      : ''
+                  }
+                  ${
+                    resumeData.personalInfo.location &&
+                    (resumeData.personalInfo.linkedin || resumeData.personalInfo.website)
+                      ? `<span> | </span>`
+                      : ''
+                  }
+                  ${
+                    resumeData.personalInfo.linkedin
+                      ? `<span>${resumeData.personalInfo.linkedin}</span>`
+                      : ''
+                  }
+                  ${
+                    resumeData.personalInfo.linkedin && resumeData.personalInfo.website
+                      ? `<span> | </span>`
+                      : ''
+                  }
+                  ${
+                    resumeData.personalInfo.website
+                      ? `<span>${resumeData.personalInfo.website}</span>`
+                      : ''
+                  }
+                </div>
+              </div>
+            </div>
+            <div style="border-top: 2px solid #ffffff; margin-top: 5mm;"></div>
+          </div>
+
+          ${resumeData.sectionOrder
+            .map((sectionId) => {
+              if (!resumeData.enabledSections[sectionId]) return '';
+
+              switch (sectionId) {
+                case 'summary':
+                  return resumeData.summary
+                    ? `
+                    <section style="margin-bottom: 10mm;">
+                      <h2 style="font-size: 18px; font-weight: bold; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; text-align: center; padding: 2mm 0; background: #333333; margin: 0;">
+                        Professional Summary
+                      </h2>
+                      <div style="margin: 5mm 0; color: #cccccc; font-size: 12px; line-height: 1.5; text-align: justify;">
+                        ${resumeData.summary}
+                      </div>
+                      <div style="border-bottom: 2px solid #ffffff; margin-top: 5mm;"></div>
+                    </section>
+                  `
+                    : '';
+
+                case 'experience':
+                  return resumeData.experience.length > 0
+                    ? `
+                    <section style="margin-bottom: 10mm;">
+                      <h2 style="font-size: 18px; font-weight: bold; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; text-align: center; padding: 2mm 0; background: #333333; margin: 0;">
+                        Work Experience
+                      </h2>
+                      <div style="margin: 5mm 0;">
+                        ${resumeData.experience
+                          .map(
+                            (exp) => `
+                          <div style="padding-bottom: 5mm; ${
+                            exp === resumeData.experience[resumeData.experience.length - 1]
+                              ? ''
+                              : 'border-bottom: 1px solid #cccccc;'
+                          }">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2mm;">
+                              <div style="flex: 1;">
+                                <h3 style="font-size: 14px; font-weight: bold; color: #ffffff; text-transform: uppercase; margin: 0 0 2mm 0;">
+                                  ${exp.title}
+                                </h3>
+                                <p style="font-size: 12px; font-weight: 600; color: #ffffff; margin: 0 0 2mm 0;">
+                                  ${exp.company}
+                                </p>
+                                ${
+                                  exp.location
+                                    ? `<p style="font-size: 11px; color: #cccccc; margin: 0 0 2mm 0;">
+                                        ${exp.location}
+                                      </p>`
+                                    : ''
+                                }
+                              </div>
+                              <span style="font-size: 11px; color: #cccccc; font-weight: 500; margin-left: 2mm;">
+                                ${
+                                  exp.startDate
+                                    ? new Date(exp.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+                                    : 'N/A'
+                                } - ${
+                                  exp.current
+                                    ? 'Present'
+                                    : exp.endDate
+                                    ? new Date(exp.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+                                    : 'N/A'
+                                }
+                              </span>
+                            </div>
+                            ${
+                              exp.description
+                                ? `<p style="font-size: 12px; color: #cccccc; margin: 0 0 2mm 0; line-height: 1.5;">
+                                    ${exp.description}
+                                  </p>`
+                                : ''
+                            }
+                            ${
+                              exp.achievements.filter(Boolean).length > 0
+                                ? `
+                              <ul style="list-style: disc; list-style-position: inside; margin: 0 0 2mm 0; padding: 0; font-size: 12px; color: #cccccc;">
+                                ${exp.achievements
+                                  .filter(Boolean)
+                                  .map(
+                                    (achievement) =>
+                                      `<li style="margin-bottom: 2mm; line-height: 1.5;">${achievement}</li>`
+                                  )
+                                  .join('')}
+                              </ul>
+                            `
+                                : ''
+                            }
+                            ${
+                              exp.links.filter(Boolean).length > 0
+                                ? `
+                              <div style="font-size: 11px; color: #cccccc; margin-top: 2mm;">
+                                ${exp.links
+                                  .filter(Boolean)
+                                  .map(
+                                    (link) =>
+                                      `[<a href="${link}" style="color: #00ffff; text-decoration: underline;">Link</a>]`
+                                  )
+                                  .join(' ')}
+                              </div>
+                            `
+                                : ''
+                            }
+                          </div>
+                        `
+                          )
+                          .join('')}
+                      </div>
+                      <div style="border-bottom: 2px solid #ffffff; margin-top: 5mm;"></div>
+                    </section>
+                  `
+                    : '';
+
+                case 'education':
+                  return resumeData.education.length > 0
+                    ? `
+                    <section style="margin-bottom: 10mm;">
+                      <h2 style="font-size: 18px; font-weight: bold; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; text-align: center; padding: 2mm 0; background: #333333; margin: 0;">
+                        Education
+                      </h2>
+                      <div style="margin: 5mm 0;">
+                        ${resumeData.education
+                          .map(
+                            (edu) => `
+                          <div style="padding-bottom: 5mm; ${
+                            edu === resumeData.education[resumeData.education.length - 1]
+                              ? ''
+                              : 'border-bottom: 1px solid #cccccc;'
+                          }">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2mm;">
+                              <div style="flex: 1;">
+                                <h3 style="font-size: 14px; font-weight: bold; color: #ffffff; margin: 0 0 2mm 0;">
+                                  ${edu.degree || 'Degree'}
+                                </h3>
+                                <p style="font-size: 12px; font-weight: 600; color: #ffffff; margin: 0 0 2mm 0;">
+                                  ${edu.school || 'School/University'}
+                                </p>
+                                ${
+                                  edu.location
+                                    ? `<p style="font-size: 11px; color: #cccccc; margin: 0 0 2mm 0;">
+                                        ${edu.location}
+                                      </p>`
+                                    : ''
+                                }
+                                ${
+                                  edu.gpa || edu.marks
+                                    ? `<p style="font-size: 11px; color: #cccccc; margin: 0;">
+                                        ${edu.gpa ? `GPA: ${edu.gpa}` : ''}${
+                                        edu.marks ? ` Marks: ${edu.marks}` : ''
+                                      }
+                                      </p>`
+                                    : ''
+                                }
+                              </div>
+                              <span style="font-size: 11px; color: #cccccc; font-weight: 500; margin-left: 2mm;">
+                                ${
+                                  edu.startDate
+                                    ? new Date(edu.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+                                    : 'N/A'
+                                } - ${
+                                  edu.endDate
+                                    ? new Date(edu.endDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })
+                                    : 'N/A'
+                                }
+                              </span>
+                            </div>
+                          </div>
+                        `
+                          )
+                          .join('')}
+                      </div>
+                      <div style="border-bottom: 2px solid #ffffff; margin-top: 5mm;"></div>
+                    </section>
+                  `
+                    : '';
+
+                case 'skills':
+                  return resumeData.skills.length > 0
+                    ? `
+                    <section style="margin-bottom: 10mm;">
+                      <h2 style="font-size: 18px; font-weight: bold; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; text-align: center; padding: 2mm 0; background: #333333; margin: 0;">
+                        Skills Summary
+                      </h2>
+                      <div style="margin: 5mm 0;">
+                        ${resumeData.skills
+                          .map(
+                            (skillCategory) => `
+                          <div style="margin-bottom: 2mm; display: flex; align-items: flex-start; gap: 5px;">
+                            <span style="font-size: 12px; font-weight: bold; color: #ffffff; flex-shrink: 0;">
+                              • ${skillCategory.category}:
+                            </span>
+                            <span style="font-size: 12px; color: #cccccc; line-height: 1.5;">
+                              ${skillCategory.items.join(', ') || 'N/A'}
+                            </span>
+                          </div>
+                        `
+                          )
+                          .join('')}
+                      </div>
+                      <div style="border-bottom: 2px solid #ffffff; margin-top: 5mm;"></div>
+                    </section>
+                  `
+                    : '';
+
+                case 'projects':
+                  return resumeData.projects.length > 0
+                    ? `
+                    <section style="margin-bottom: 10mm;">
+                      <h2 style="font-size: 18px; font-weight: bold; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; text-align: center; padding: 2mm 0; background: #333333; margin: 0;">
+                        Projects
+                      </h2>
+                      <div style="margin: 5mm 0;">
+                        ${resumeData.projects
+                          .map(
+                            (project) => `
+                          <div style="padding-bottom: 5mm; ${
+                            project === resumeData.projects[resumeData.projects.length - 1]
+                              ? ''
+                              : 'border-bottom: 1px solid #cccccc;'
+                          }">
+                            <h3 style="font-size: 14px; font-weight: bold; color: #ffffff; margin: 0 0 2mm 0;">
+                              ${project.name}
+                            </h3>
+                            <p style="font-size: 12px; color: #cccccc; margin: 0 0 2mm 0; line-height: 1.5;">
+                              ${project.description}
+                            </p>
+                            ${
+                              project.technologies.filter(Boolean).length > 0
+                                ? `
+                              <p style="font-size: 11px; color: #cccccc; margin: 0 0 2mm 0;">
+                                <strong>Technologies:</strong> ${project.technologies
+                                  .filter(Boolean)
+                                  .join(', ')}
+                              </p>
+                            `
+                                : ''
+                            }
+                            ${
+                              project.links.filter(Boolean).length > 0
+                                ? `
+                              <div style="font-size: 11px; color: #cccccc; margin-top: 2mm;">
+                                ${project.links
+                                  .filter(Boolean)
+                                  .map(
+                                    (link) =>
+                                      `[<a href="${link}" style="color: #00ffff; text-decoration: underline;">Link</a>]`
+                                  )
+                                  .join(' ')}
+                              </div>
+                            `
+                                : ''
+                            }
+                          </div>
+                        `
+                          )
+                          .join('')}
+                      </div>
+                      <div style="border-bottom: 2px solid #ffffff; margin-top: 5mm;"></div>
+                    </section>
+                  `
+                    : '';
+
+                case 'certifications':
+                  return resumeData.certifications.length > 0
+                    ? `
+                    <section style="margin-bottom: 10mm;">
+                      <h2 style="font-size: 18px; font-weight: bold; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; text-align: center; padding: 2mm 0; background: #333333; margin: 0;">
+                        Certifications
+                      </h2>
+                      <div style="margin: 5mm 0;">
+                        ${resumeData.certifications
+                          .map(
+                            (cert) => `
+                          <div style="padding-bottom: 5mm; ${
+                            cert === resumeData.certifications[resumeData.certifications.length - 1]
+                              ? ''
+                              : 'border-bottom: 1px solid #cccccc;'
+                          }">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2mm;">
+                              <div style="flex: 1;">
+                                <h3 style="font-size: 14px; font-weight: bold; color: #ffffff; margin: 0 0 2mm 0;">
+                                  ${cert.name}
+                                </h3>
+                                <p style="font-size: 12px; font-weight: 600; color: #ffffff; margin: 0;">
+                                  ${cert.issuer}
+                                </p>
+                              </div>
+                              <span style="font-size: 11px; color: #cccccc; font-weight: 500; margin-left: 2mm;">
+                                ${cert.date}
+                              </span>
+                            </div>
+                            ${
+                              cert.links.filter(Boolean).length > 0
+                                ? `
+                              <div style="font-size: 11px; color: #cccccc; margin-top: 2mm;">
+                                ${cert.links
+                                  .filter(Boolean)
+                                  .map(
+                                    (link) =>
+                                      `[<a href="${link}" style="color: #00ffff; text-decoration: underline;">Link</a>]`
+                                  )
+                                  .join(' ')}
+                              </div>
+                            `
+                                : ''
+                            }
+                          </div>
+                        `
+                          )
+                          .join('')}
+                      </div>
+                      <div style="border-bottom: 2px solid #ffffff; margin-top: 5mm;"></div>
+                    </section>
+                  `
+                    : '';
+
+                case 'awards':
+                  return resumeData.awards.length > 0
+                    ? `
+                    <section style="margin-bottom: 10mm;">
+                      <h2 style="font-size: 18px; font-weight: bold; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; text-align: center; padding: 2mm 0; background: #333333; margin: 0;">
+                        Awards & Achievements
+                      </h2>
+                      <div style="margin: 5mm 0;">
+                        ${resumeData.awards
+                          .map(
+                            (award) => `
+                          <div style="padding-bottom: 5mm; ${
+                            award === resumeData.awards[resumeData.awards.length - 1]
+                              ? ''
+                              : 'border-bottom: 1px solid #cccccc;'
+                          }">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 2mm;">
+                              <div style="flex: 1;">
+                                <h3 style="font-size: 14px; font-weight: bold; color: #ffffff; margin: 0 0 2mm 0;">
+                                  ${award.title}
+                                </h3>
+                                <p style="font-size: 12px; font-weight: 600; color: #ffffff; margin: 0 0 2mm 0;">
+                                  ${award.issuer}
+                                </p>
+                                ${
+                                  award.description
+                                    ? `<p style="font-size: 11px; color: #cccccc; margin: 0;">
+                                        ${award.description}
+                                      </p>`
+                                    : ''
+                                }
+                              </div>
+                              <span style="font-size: 11px; color: #cccccc; font-weight: 500; margin-left: 2mm;">
+                                ${award.date}
+                              </span>
+                            </div>
+                            ${
+                              award.links.filter(Boolean).length > 0
+                                ? `
+                              <div style="font-size: 11px; color: #cccccc; margin-top: 2mm;">
+                                ${award.links
+                                  .filter(Boolean)
+                                  .map(
+                                    (link) =>
+                                      `[<a href="${link}" style="color: #00ffff; text-decoration: underline;">Link</a>]`
+                                  )
+                                  .join(' ')}
+                              </div>
+                            `
+                                : ''
+                            }
+                          </div>
+                        `
+                          )
+                          .join('')}
+                      </div>
+                      <div style="border-bottom: 2px solid #ffffff; margin-top: 5mm;"></div>
+                    </section>
+                  `
+                    : '';
+
+                default:
+                  if (sectionId.startsWith('custom-')) {
+                    const customSection = resumeData.customSections.find((s) => s.id === sectionId);
+                    return customSection
+                      ? `
+                      <section style="margin-bottom: 10mm;">
+                        <h2 style="font-size: 18px; font-weight: bold; color: #ffffff; text-transform: uppercase; letter-spacing: 1px; text-align: center; padding: 2mm 0; background: #333333; margin: 0;">
+                          ${customSection.title}
+                        </h2>
+                        <div style="margin: 5mm 0; font-size: 12px; color: #cccccc; line-height: 1.5; white-space: pre-wrap;">
+                          ${customSection.content}
+                        </div>
+                        <div style="border-bottom: 2px solid #ffffff; margin-top: 5mm;"></div>
+                      </section>
+                    `
+                      : '';
+                  }
+                  return '';
+              }
+            })
+            .filter(Boolean)
+            .join('')}
+        </div>
+      `;
       tempDiv.innerHTML = htmlContent;
 
       const canvas = await html2canvas(tempDiv, {
         scale: 2,
         useCORS: true,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#000000',
         width: tempDiv.offsetWidth,
-        height: tempDiv.offsetHeight
+        height: tempDiv.scrollHeight
       });
 
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgData = canvas.toDataURL('image/png');
-      
       const pdfWidth = pdf.internal.pageSize.getWidth();
       const pdfHeight = pdf.internal.pageSize.getHeight();
       const imgWidth = canvas.width;
       const imgHeight = canvas.height;
       const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
       const imgX = (pdfWidth - imgWidth * ratio) / 2;
-      const imgY = 0;
+      let imgY = 0;
 
-      pdf.addImage(imgData, 'PNG', imgX, imgY, imgWidth * ratio, imgHeight * ratio);
+      const pageHeight = pdfHeight / ratio;
+      const totalPages = Math.ceil(imgHeight / pageHeight);
+
+      for (let page = 0; page < totalPages; page++) {
+        if (page > 0) pdf.addPage();
+        const srcY = page * pageHeight;
+        const pageCanvas = document.createElement('canvas');
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = Math.min(pageHeight, imgHeight - srcY);
+        const context = pageCanvas.getContext('2d');
+        context.drawImage(canvas, 0, srcY, canvas.width, pageCanvas.height, 0, 0, canvas.width, pageCanvas.height);
+        const pageImgData = pageCanvas.toDataURL('image/png');
+        pdf.addImage(pageImgData, 'PNG', imgX, imgY, imgWidth * ratio, Math.min(pageHeight, imgHeight - srcY) * ratio);
+      }
+
       pdf.save(`${resumeData.personalInfo.name || 'Resume'}_Resume.pdf`);
-
       document.body.removeChild(tempDiv);
     } catch (error) {
       console.error('Error generating PDF:', error);
@@ -204,242 +700,8 @@ const Index = () => {
     }
   };
 
-  const generatePDFContent = (resumeData) => {
-    return `
-      <div style="max-width: 170mm; margin: 0 auto; color: black;">
-        <div style="margin-bottom: 20px; border-bottom: 2px solid #333; padding-bottom: 10px;">
-          <h1 style="font-size: 24px; font-weight: bold; margin: 0 0 10px 0; text-transform: uppercase; letter-spacing: 1px;">
-            ${resumeData.personalInfo.name || 'Your Name'}
-          </h1>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 11px; color: #666;">
-            ${resumeData.personalInfo.email ? `<div>✉ ${resumeData.personalInfo.email}</div>` : ''}
-            ${resumeData.personalInfo.phone ? `<div>📞 ${resumeData.personalInfo.phone}</div>` : ''}
-            ${resumeData.personalInfo.location ? `<div>📍 ${resumeData.personalInfo.location}</div>` : ''}
-            ${resumeData.personalInfo.linkedin ? `<div>💼 ${resumeData.personalInfo.linkedin}</div>` : ''}
-            ${resumeData.personalInfo.website ? `<div style="grid-column: 1 / -1;">🌐 ${resumeData.personalInfo.website}</div>` : ''}
-          </div>
-        </div>
-
-        ${resumeData.sectionOrder.map(sectionId => {
-          if (!resumeData.enabledSections[sectionId]) return '';
-          
-          switch (sectionId) {
-            case 'summary':
-              return resumeData.summary ? `
-                <div style="margin-bottom: 20px;">
-                  <div style="border-bottom: 2px solid #333; margin-bottom: 10px;">
-                    <h2 style="font-size: 14px; font-weight: bold; text-transform: uppercase; text-align: center; padding: 8px 0; background: #f5f5f5; margin: 0;">
-                      Professional Summary
-                    </h2>
-                  </div>
-                  <p style="text-align: justify; line-height: 1.5; margin: 0; padding: 0 10px;">
-                    ${resumeData.summary}
-                  </p>
-                </div>
-              ` : '';
-
-            case 'experience':
-              return resumeData.experience.length > 0 ? `
-                <div style="margin-bottom: 20px;">
-                  <div style="border-bottom: 2px solid #333; margin-bottom: 10px;">
-                    <h2 style="font-size: 14px; font-weight: bold; text-transform: uppercase; text-align: center; padding: 8px 0; background: #f5f5f5; margin: 0;">
-                      Work Experience
-                    </h2>
-                  </div>
-                  <div style="padding: 0 10px;">
-                    ${resumeData.experience.map(exp => `
-                      <div style="margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 8px;">
-                          <div style="flex: 1;">
-                            <h3 style="font-size: 12px; font-weight: bold; text-transform: uppercase; margin: 0 0 4px 0;">${exp.title}</h3>
-                            <p style="font-weight: 600; margin: 0 0 2px 0; font-size: 11px;">${exp.company}</p>
-                            ${exp.location ? `<p style="color: #666; font-size: 10px; margin: 0;">${exp.location}</p>` : ''}
-                          </div>
-                          <span style="color: #666; font-size: 10px; font-weight: 500; margin-left: 10px;">
-                            ${exp.startDate} - ${exp.current ? 'Present' : exp.endDate}
-                          </span>
-                        </div>
-                        ${exp.description ? `<p style="font-size: 11px; line-height: 1.4; margin: 0 0 8px 0;">${exp.description}</p>` : ''}
-                        ${exp.achievements.filter(Boolean).length > 0 ? `
-                          <ul style="margin: 0 0 8px 15px; padding: 0; font-size: 11px;">
-                            ${exp.achievements.filter(Boolean).map(achievement => `<li style="margin-bottom: 2px;">${achievement}</li>`).join('')}
-                          </ul>
-                        ` : ''}
-                        ${exp.links.filter(Boolean).length > 0 ? `
-                          <div style="font-size: 10px;">
-                            ${exp.links.filter(Boolean).map(link => `[<a href="${link}" style="color: #0066cc;">Link</a>]`).join(' ')}
-                          </div>
-                        ` : ''}
-                      </div>
-                    `).join('')}
-                  </div>
-                </div>
-              ` : '';
-
-            case 'education':
-              return resumeData.education.length > 0 ? `
-                <div style="margin-bottom: 20px;">
-                  <div style="border-bottom: 2px solid #333; margin-bottom: 10px;">
-                    <h2 style="font-size: 14px; font-weight: bold; text-transform: uppercase; text-align: center; padding: 8px 0; background: #f5f5f5; margin: 0;">
-                      Education
-                    </h2>
-                  </div>
-                  <div style="padding: 0 10px;">
-                    ${resumeData.education.map(edu => `
-                      <div style="margin-bottom: 12px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
-                        <div style="display: flex; justify-content: space-between; align-items: start;">
-                          <div style="flex: 1;">
-                            <h3 style="font-size: 11px; font-weight: bold; margin: 0 0 2px 0;">${edu.degree}</h3>
-                            <p style="font-weight: 600; font-size: 11px; margin: 0 0 2px 0;">${edu.school}</p>
-                            ${edu.location ? `<p style="color: #666; font-size: 10px; margin: 0 0 2px 0;">${edu.location}</p>` : ''}
-                            <div style="font-size: 10px; color: #666;">
-                              ${edu.gpa ? `GPA: ${edu.gpa}${edu.marks ? ' | ' : ''}` : ''}
-                              ${edu.marks ? `Marks: ${edu.marks}` : ''}
-                            </div>
-                          </div>
-                          <span style="color: #666; font-size: 10px; font-weight: 500; margin-left: 10px;">
-                            ${edu.year || `${edu.startDate} - ${edu.endDate}`}
-                          </span>
-                        </div>
-                      </div>
-                    `).join('')}
-                  </div>
-                </div>
-              ` : '';
-
-            case 'skills':
-              return resumeData.skills.length > 0 ? `
-                <div style="margin-bottom: 20px;">
-                  <div style="border-bottom: 2px solid #333; margin-bottom: 10px;">
-                    <h2 style="font-size: 14px; font-weight: bold; text-transform: uppercase; text-align: center; padding: 8px 0; background: #f5f5f5; margin: 0;">
-                      Skills Summary
-                    </h2>
-                  </div>
-                  <div style="padding: 0 10px;">
-                    ${resumeData.skills.map(skillCategory => `
-                      <div style="margin-bottom: 8px;">
-                        <span style="font-weight: bold; font-size: 11px;">• ${skillCategory.category}:</span>
-                        <span style="font-size: 11px; margin-left: 5px;">${skillCategory.items.join(', ')}</span>
-                      </div>
-                    `).join('')}
-                  </div>
-                </div>
-              ` : '';
-
-            case 'projects':
-              return resumeData.projects.length > 0 ? `
-                <div style="margin-bottom: 20px;">
-                  <div style="border-bottom: 2px solid #333; margin-bottom: 10px;">
-                    <h2 style="font-size: 14px; font-weight: bold; text-transform: uppercase; text-align: center; padding: 8px 0; background: #f5f5f5; margin: 0;">
-                      Projects
-                    </h2>
-                  </div>
-                  <div style="padding: 0 10px;">
-                    ${resumeData.projects.map(project => `
-                      <div style="margin-bottom: 12px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
-                        <h3 style="font-size: 11px; font-weight: bold; margin: 0 0 4px 0;">${project.name}</h3>
-                        <p style="font-size: 11px; line-height: 1.4; margin: 0 0 4px 0;">${project.description}</p>
-                        ${project.technologies.filter(Boolean).length > 0 ? `
-                          <p style="font-size: 10px; color: #666; margin: 0 0 4px 0;">
-                            <strong>Technologies:</strong> ${project.technologies.filter(Boolean).join(', ')}
-                          </p>
-                        ` : ''}
-                        ${project.links.filter(Boolean).length > 0 ? `
-                          <div style="font-size: 10px;">
-                            ${project.links.filter(Boolean).map(link => `[<a href="${link}" style="color: #0066cc;">Link</a>]`).join(' ')}
-                          </div>
-                        ` : ''}
-                      </div>
-                    `).join('')}
-                  </div>
-                </div>
-              ` : '';
-
-            case 'certifications':
-              return resumeData.certifications.length > 0 ? `
-                <div style="margin-bottom: 20px;">
-                  <div style="border-bottom: 2px solid #333; margin-bottom: 10px;">
-                    <h2 style="font-size: 14px; font-weight: bold; text-transform: uppercase; text-align: center; padding: 8px 0; background: #f5f5f5; margin: 0;">
-                      Certifications
-                    </h2>
-                  </div>
-                  <div style="padding: 0 10px;">
-                    ${resumeData.certifications.map(cert => `
-                      <div style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 6px;">
-                        <div style="display: flex; justify-content: space-between; align-items: start;">
-                          <div style="flex: 1;">
-                            <h3 style="font-size: 11px; font-weight: bold; margin: 0 0 2px 0;">${cert.name}</h3>
-                            <p style="font-weight: 600; font-size: 11px; margin: 0;">${cert.issuer}</p>
-                          </div>
-                          <span style="color: #666; font-size: 10px; font-weight: 500; margin-left: 10px;">${cert.date}</span>
-                        </div>
-                        ${cert.links.filter(Boolean).length > 0 ? `
-                          <div style="font-size: 10px; margin-top: 4px;">
-                            ${cert.links.filter(Boolean).map(link => `[<a href="${link}" style="color: #0066cc;">Link</a>]`).join(' ')}
-                          </div>
-                        ` : ''}
-                      </div>
-                    `).join('')}
-                  </div>
-                </div>
-              ` : '';
-
-            case 'awards':
-              return resumeData.awards.length > 0 ? `
-                <div style="margin-bottom: 20px;">
-                  <div style="border-bottom: 2px solid #333; margin-bottom: 10px;">
-                    <h2 style="font-size: 14px; font-weight: bold; text-transform: uppercase; text-align: center; padding: 8px 0; background: #f5f5f5; margin: 0;">
-                      Awards & Achievements
-                    </h2>
-                  </div>
-                  <div style="padding: 0 10px;">
-                    ${resumeData.awards.map(award => `
-                      <div style="margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 6px;">
-                        <div style="display: flex; justify-content: space-between; align-items: start;">
-                          <div style="flex: 1;">
-                            <h3 style="font-size: 11px; font-weight: bold; margin: 0 0 2px 0;">${award.title}</h3>
-                            <p style="font-weight: 600; font-size: 11px; margin: 0 0 2px 0;">${award.issuer}</p>
-                            ${award.description ? `<p style="color: #666; font-size: 10px; margin: 0;">${award.description}</p>` : ''}
-                          </div>
-                          <span style="color: #666; font-size: 10px; font-weight: 500; margin-left: 10px;">${award.date}</span>
-                        </div>
-                        ${award.links.filter(Boolean).length > 0 ? `
-                          <div style="font-size: 10px; margin-top: 4px;">
-                            ${award.links.filter(Boolean).map(link => `[<a href="${link}" style="color: #0066cc;">Link</a>]`).join(' ')}
-                          </div>
-                        ` : ''}
-                      </div>
-                    `).join('')}
-                  </div>
-                </div>
-              ` : '';
-
-            default:
-              if (sectionId.startsWith('custom-')) {
-                const customSection = resumeData.customSections.find(s => s.id === sectionId);
-                return customSection ? `
-                  <div style="margin-bottom: 20px;">
-                    <div style="border-bottom: 2px solid #333; margin-bottom: 10px;">
-                      <h2 style="font-size: 14px; font-weight: bold; text-transform: uppercase; text-align: center; padding: 8px 0; background: #f5f5f5; margin: 0;">
-                        ${customSection.title}
-                      </h2>
-                    </div>
-                    <div style="font-size: 11px; line-height: 1.4; white-space: pre-wrap; padding: 0 10px;">
-                      ${customSection.content}
-                    </div>
-                  </div>
-                ` : '';
-              }
-              return '';
-          }
-        }).filter(Boolean).join('')}
-      </div>
-    `;
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      {/* Header */}
       <div className="border-b border-gray-200 dark:border-gray-700 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
@@ -472,7 +734,6 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="w-full">
           <div className="flex bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg mb-8">
