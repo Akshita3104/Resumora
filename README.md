@@ -1,4 +1,4 @@
-# 🚀 ATS Resume Checker & Builder  
+# 🚀 Resume Builder with ATS Checker  
 **Build ATS-Optimized Resumes That Pass Automated Screening Systems**  
 
 <div align="center">
