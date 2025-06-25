@@ -39,7 +39,7 @@ if (!process.env.GROQ_API_KEY) {
   process.exit(1);
 }
 
-app.use(cors({ origin: 'https://resumora-tau.vercel.app/' }));
+app.use(cors({ origin: 'https://resumora-tau.vercel.app' }));
 app.use(express.json({ limit: '10mb' }));
 
 app.post('/analyze-resume', upload.single('resume'), async (req, res) => {
