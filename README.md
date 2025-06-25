@@ -109,7 +109,7 @@ Our algorithm evaluates 12 critical dimensions:
 </div>
 
 ## 🌐 Deployment  
-[![Deploy on Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FAkshita3104%2FResume-builder-with-ATS-checker)  
+[![Deploy on Vercel](https://vercel.com/button)](https://resumora-tau.vercel.app/)  
 
 ## 📜 License  
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
