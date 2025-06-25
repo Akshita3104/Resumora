@@ -13,7 +13,7 @@
 
 > "75% of resumes are rejected by ATS before human eyes see them. Optimize yours to survive the algorithm." - _HR Tech Report 2024_
 
-Our solution combines an intuitive resume builder with military-grade ATS analysis to:
+This solution combines an intuitive resume builder with military-grade ATS analysis to:
 
 - 🛡️ **Prevent automated rejection**
 - 🎯 **Increase interview chances by 3x**
@@ -89,7 +89,7 @@ npm start
 
 ## 🧪 ATS Scoring Methodology
 
-Our algorithm evaluates 12 critical dimensions:
+Algorithm evaluates critical dimensions like:
 
 1. **Contact Information** (10 pts)
    - Phone/email validation
@@ -104,8 +104,6 @@ Our algorithm evaluates 12 critical dimensions:
    - Header validation
    - Font consistency
    - Section ordering
-
-> 📌 Pro Tip: Scores >85/100 pass 92% of Fortune 500 ATS filters
 
 ## 📸 UI Preview
 
