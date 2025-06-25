@@ -65,7 +65,7 @@ export const ATSChecker = ({ resumeData, onScoreUpdate }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/analyze-resume', {
+      const response = await fetch('https://resumora.onrender.com/analyze-resume', {
         method: 'POST',
         body: formData,
       });
