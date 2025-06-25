@@ -1,5 +1,6 @@
-# 🚀 Resume Builder with ATS Checker  
-**Build ATS-Optimized Resumes That Pass Automated Screening Systems**  
+# 🚀 Resume Builder with ATS Checker
+
+**Build ATS-Optimized Resumes That Pass Automated Screening Systems**
 
 <div align="center">
   <img src="https://img.shields.io/badge/React-18.2.0-61DAFB?logo=react" />
@@ -8,23 +9,25 @@
   <img src="https://img.shields.io/badge/License-MIT-blue.svg" />
 </div>
 
-## 🔍 Why This Tool Matters  
-> "75% of resumes are rejected by ATS before human eyes see them. Optimize yours to survive the algorithm." - *HR Tech Report 2024*
+## 🔍 Why This Tool Matters
+
+> "75% of resumes are rejected by ATS before human eyes see them. Optimize yours to survive the algorithm." - _HR Tech Report 2024_
 
 Our solution combines an intuitive resume builder with military-grade ATS analysis to:
+
 - 🛡️ **Prevent automated rejection**
 - 🎯 **Increase interview chances by 3x**
 - ⚡ **Save hours of manual formatting**
 
-## ✨ Premium Features  
+## ✨ Premium Features
 
-| Feature | Benefit | Tech Used |
-|---------|---------|-----------|
-| **Real-time ATS Score** | Instant feedback on resume quality | AI Analysis Engine |
-| **Multi-Format Parsing** | PDF/DOCX to structured data | Node.js PDF/DOCX parsers |
-| **Dynamic Preview** | WYSIWYG editing experience | React + Tailwind CSS |
-| **Industry Templates** | Tech-specific resume formats | Pre-built JSON schemas |
-| **Dark Mode** | Eye-friendly interface | CSS Variables + React Hooks |
+| Feature                  | Benefit                            | Tech Used                   |
+| ------------------------ | ---------------------------------- | --------------------------- |
+| **Real-time ATS Score**  | Instant feedback on resume quality | AI Analysis Engine          |
+| **Multi-Format Parsing** | PDF/DOCX to structured data        | Node.js PDF/DOCX parsers    |
+| **Dynamic Preview**      | WYSIWYG editing experience         | React + Tailwind CSS        |
+| **Industry Templates**   | Tech-specific resume formats       | Pre-built JSON schemas      |
+| **Dark Mode**            | Eye-friendly interface             | CSS Variables + React Hooks |
 
 ```mermaid
 graph LR
@@ -39,21 +42,24 @@ F --> G
 G --> H[Actionable Insights]
 ```
 
-## 🚀 Getting Started  
+## 🚀 Getting Started
 
-### Prerequisites  
+### Prerequisites
+
 ```bash
-node -v # 
-npm -v  # 
+node -v #
+npm -v  #
 ```
 
-### Installation  
+### Installation
+
 ```bash
 # Clone with SSH
 git clone git@github.com:Akshita3104/Resume-builder-with-ATS-checker.git
 ```
 
-## 🛠️ Configuration  
+## 🛠️ Configuration
+
 ```bash
 ## Install Backend Dependencies:
 cd backend
@@ -69,7 +75,8 @@ GROQ_API_KEY=your_groq_api_key_here
 Replace your_groq_api_key_here with your actual API key.
 ```
 
-### Launch Development  
+### Launch Development
+
 ```bash
 # Start in development mode (concurrently)
 npm run dev
@@ -80,38 +87,41 @@ npm start
 # Backend → http://localhost:5000
 ```
 
-## 🧪 ATS Scoring Methodology  
-Our algorithm evaluates 12 critical dimensions:  
+## 🧪 ATS Scoring Methodology
 
-1. **Contact Information** (10 pts)  
+Our algorithm evaluates 12 critical dimensions:
+
+1. **Contact Information** (10 pts)
    - Phone/email validation
    - Location formatting
-2. **Skills Section** (25 pts)  
+2. **Skills Section** (25 pts)
    - Keyword density (industry-specific)
    - Relevance to target role
-3. **Experience Depth** (30 pts)  
+3. **Experience Depth** (30 pts)
    - Action verb analysis
    - Quantifiable achievements
-4. **Formatting Compliance** (15 pts)  
+4. **Formatting Compliance** (15 pts)
    - Header validation
    - Font consistency
-   - Section ordering  
+   - Section ordering
 
 > 📌 Pro Tip: Scores >85/100 pass 92% of Fortune 500 ATS filters
 
-
-
-## 📸 UI Preview  
+## 📸 UI Preview
 
 <div align="center">
-  <img width="45%" src="https://via.placeholder.com/500x300/0f172a/ffffff?text=Resume+Builder+Interface" /> 
-  <img width="45%" src="https://via.placeholder.com/500x300/0f172a/ffffff?text=ATS+Scoring+Dashboard" />
+  <img width="45%" src="screenshots\Screenshot 2025-06-25 110940.png" /> 
+  <img width="45%" src="screenshots\Screenshot 2025-06-25 110949.png" /> 
+  <img width="45%" src="screenshots\Screenshot 2025-06-25 110958.png" /> 
+  <img width="45%" src="screenshots\Screenshot 2025-06-25 111007.png" />
 </div>
 
-## 🌐 Deployment  
-[![Deploy on Vercel](https://vercel.com/button)](https://resumora-tau.vercel.app/)  
+## 🌐 Deployment
 
-## 📜 License  
+[![Deploy on Vercel](https://vercel.com/button)](https://resumora-tau.vercel.app/)
+
+## 📜 License
+
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE) file for details.
 
 ---
